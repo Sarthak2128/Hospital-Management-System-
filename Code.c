@@ -390,3 +390,80 @@ void todaysAppointments() {
         }
     }
     if(!found)
+if(!found) printf("No appointments for today.\n");
+}
+
+void checkAppointmentStatus() {
+    int id, found=0;
+    printf("Enter Appointment ID: ");
+    scanf("%d", &id);
+    for(int i=0; i<appointmentCount;i++) {
+        if(appointments[i].id==id) {
+            printf("Appointment ID %d for patient %s is %s\n", id, appointments[i].patientName, appointments[i].status ? "Completed" :"Pending");
+            found=1;
+            break;
+        }
+    }
+    if(!found) printf("Appointment ID %d not found.\n", id);
+}
+
+void getCurrentDate(char* date) {
+    time_t t=time(NULL);
+    struct tm tm=*localtime(&t);
+    sprintf(date, "%04d-%02d-%02d", tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday);
+}
+
+void checkMedicineStock() {
+    printf("\nMedicine Stock:\n");
+    printf("| Medicine Name        | Quantity |\n");
+    printf("-------------------------------\n");
+    for(int i=0;i<stockCount;i++){
+        printf("| %-20s | %-8d |\n", stock[i].name, stock[i].quantity);
+    }
+}
+
+void restockMedicine() {
+    char medName[50];
+    int qty, found=0;
+    printf("Enter medicine name to restock: ");
+    scanf(" %[^\n]s", medName);
+    printf("Enter quantity to add: ");
+    scanf("%d", &qty);
+    for(int i=0;i<stockCount;i++){
+        if(strcmp(stock[i].name,medName)==0){
+            stock[i].quantity+=qty;
+            found=1;
+            break;
+        }
+    }
+    if(!found){
+        strcpy(stock[stockCount].name, medName);
+        stock[stockCount].quantity=qty;
+        printf("Medicine %s added to stock. Current quantity: %d\n", medName, stock[stockCount].quantity);
+        stockCount++;
+    } else {
+        printf("Medicine %s restocked successfully. Current quantity: %d\n", medName, qty);
+    }
+}
+
+void bookAppointment() {
+    if(appointmentCount >= 50) {printf("Appointment storage full.\n"); return;}
+    Appointment a;
+    a.id = appointmentCount+1;
+    printf("Enter patient name: ");
+    scanf(" %[^\n]s", a.patientName);
+    printf("Enter appointment date (YYYY-MM-DD): ");
+    scanf(" %[^\n]s", a.date);
+    a.status = 0;
+    appointments[appointmentCount++] = a;
+    printf("Appointment booked successfully with ID %d\n", a.id);
+}
+
+void viewPatientRecords() {
+    printf("\n================ PATIENT RECORDS ================\n");
+    printf("| ID | Name               | Age | Gender | Disease          |\n");
+    for(int i=0;i<patientRecordCount;i++){
+        printf("| %-2d | %-18s | %-3d | %-6c | %-15s |\n", patientRecords[i].id, patientRecords[i].name, patientRecords[i].age, patientRecords[i].gender, patientRecords[i].disease);
+    }
+    printf("=================================================\n");
+}
